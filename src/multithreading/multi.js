@@ -67,6 +67,17 @@ var multi = {
     return set;
   },
 
+  testSerializedSet : function (set, cost, A, S, data, F) {
+    // Calculate how much samples are in the set
+    var error = 0;
+    for (var i = 0; i < set.length; i += 2) {
+      let output = this.activateSerializedNetwork(set[i], A, S, data, F);
+      error += cost(set[i + 1], output);
+    }
+  
+    return error / (set.length / 2);
+  },
+
   /** A list of compiled activation functions in a certain order */
   activations: [
     function (x) { return 1 / (1 + Math.exp(-x)); },
@@ -88,17 +99,6 @@ var multi = {
       return (x > 0 ? x : a * Math.exp(x) - a) * 1.0507009873554804934193349852946;
     }
   ]
-};
-
-multi.testSerializedSet = function (set, cost, A, S, data, F) {
-  // Calculate how much samples are in the set
-  var error = 0;
-  for (var i = 0; i < set.length; i += 2) {
-    let output = multi.activateSerializedNetwork(set[i], A, S, data, F);
-    error += cost(set[i + 1], output);
-  }
-
-  return error / (set.length / 2);
 };
 
 /* Export */
